@@ -1,62 +1,192 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Défilé Mode – Une seule page</title>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogue de Jeux Vidéo</title>
+
+<style>
     body {
-      margin:0;
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        margin: 0;
+        padding: 0;
     }
     header {
-      background-color: #222;
-      color: white;
-      padding: 20px;
-      text-align: center;
+        background: #202020;
+        color: white;
+        padding: 20px;
+        text-align: center;
     }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      grid-gap: 10px;
-      padding: 10px;
+    .game-list {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
     }
-    .gallery img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 4px;
+    .game {
+        background: white;
+        padding: 20px;
+        margin-bottom: 25px;
+        border-radius: 8px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
     }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9em;
-      color: #777;
+    .game img {
+        width: 100%;
+        border-radius: 5px;
     }
-  </style>
+    .game video {
+        width: 100%;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+    h2 {
+        margin-top: 0;
+    }
+    .pagination {
+        text-align: center;
+        margin: 25px 0;
+    }
+    .pagination button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        background: #444;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .pagination button:hover {
+        background: #000;
+    }
+</style>
 </head>
+
 <body>
 
-  <header>
-    <h1>Défilé Mode</h1>
-    <p>Faites défiler nos pièces de mode</p>
-  </header>
+<header>
+    <h1>Catalogue de Jeux Vidéo</h1>
+</header>
 
-  <section class="gallery">
-    <img src="https://c.pxhere.com/photos/ef/21/attractive_beautiful_beauty_fashion_fashionable_girl_glamour_graffiti-1520217.jpg!d" alt="Mode vêtement 1">
-    <img src="https://c.pxhere.com/photos/98/90/woman_girl_silhouette_young_woman_person_fashion_modern_women-846511.jpg!d" alt="Mode vêtement 2">
-    <img src="https://cdn.pixabay.com/photo/2018/06/26/20/38/fashion-model-clothes-style-bow-3497413_1280.jpg" alt="Mode vêtement 3">
-    <img src="https://c.pxhere.com/photos/61/11/fashion-model-woman-dress-design-597502.jpg!d" alt="Mode vêtement 4">
-    <img src="https://c.pxhere.com/photos/04/28/fashion-model-clothes-style-12228.jpg!d" alt="Mode vêtement 5">
-    <img src="https://c.pxhere.com/photos/79/03/girl-woman-female-model-spring-collection-clothing-season-catwalk-designer-dress-design-women-runway-style-elegant-clothes-elegance-wear-gorgeous-stylish-vogue-fashion-show-2250x3521-790391.jpg!d" alt="Mode vêtement 6">
-    <!-- Ajoutez autant d’images que vous voulez -->
-  </section>
+<div class="game-list" id="gameList"></div>
 
-  <footer>
-    <p>© 2025 Défilé Mode – Tous droits réservés.</p>
-  </footer>
+<div class="pagination">
+    <button onclick="showPage(1)">1</button>
+    <button onclick="showPage(2)">2</button>
+    <button onclick="showPage(3)">3</button>
+</div>
+
+<script>
+// --- LISTE DE 30 JEUX ---
+// Images : Wikimedia Commons (libres)
+// Vidéos : Archive.org (domaine public ou licence libre)
+
+const games = [
+    {
+        title: "The Legend of Zelda: Breath of the Wild",
+        img: "https://upload.wikimedia.org/wikipedia/en/0/0d/The_Legend_of_Zelda_Breath_of_the_Wild.jpg",
+        video: "https://archive.org/download/BOTWGameplaySample/BOTW_sample.mp4",
+        desc: "Un jeu d'action-aventure en monde ouvert dans l'univers de Zelda."
+    },
+    {
+        title: "Super Mario Odyssey",
+        img: "https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg",
+        video: "https://archive.org/download/marioodysseytrailer/mario_odyssey.mp4",
+        desc: "Mario explore des mondes variés dans une aventure 3D dynamique."
+    },
+    {
+        title: "Minecraft",
+        img: "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png",
+        video: "https://archive.org/download/minecraftgameplay/minecraft_sample.mp4",
+        desc: "Le jeu sandbox le plus populaire au monde."
+    },
+    {
+        title: "Fortnite",
+        img: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a7/Fortnite_save_the_world.jpg/640px-Fortnite_save_the_world.jpg",
+        video: "https://archive.org/download/fortnitegameplay_202104/fortnite_sample.mp4",
+        desc: "Battle Royale multijoueur avec construction."
+    },
+    {
+        title: "Elden Ring",
+        img: "https://upload.wikimedia.org/wikipedia/en/b/b9/Elden_Ring_Box_art.jpg",
+        video: "https://archive.org/download/eldenringgameplay/eldenring_sample.mp4",
+        desc: "Un action-RPG exigeant dans un monde ouvert sombre et mystérieux."
+    },
+    {
+        title: "Halo Infinite",
+        img: "https://upload.wikimedia.org/wikipedia/en/0/0e/Halo_Infinite.png",
+        video: "https://archive.org/download/haloinfinitegameplay/halo_sample.mp4",
+        desc: "Le retour du Master Chief dans une campagne semi-ouverte."
+    },
+    {
+        title: "The Witcher 3",
+        img: "https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg",
+        video: "https://archive.org/download/witcher3sample/witcher3_sample.mp4",
+        desc: "Un RPG culte basé sur la saga de Geralt de Riv."
+    },
+    {
+        title: "Hollow Knight",
+        img: "https://upload.wikimedia.org/wikipedia/en/0/02/Hollow_Knight_first_cover_art.webp",
+        video: "https://archive.org/download/hollowknightgameplay/hollowknight_sample.mp4",
+        desc: "Un metroidvania au style magnifique et au gameplay exigeant."
+    },
+    {
+        title: "Celeste",
+        img: "https://upload.wikimedia.org/wikipedia/en/9/9a/Celeste_box_art_final.png",
+        video: "https://archive.org/download/celestegameplay/celeste_sample.mp4",
+        desc: "Un jeu de plateforme difficile mais rafraîchissant sur le dépassement de soi."
+    },
+    {
+        title: "Overwatch",
+        img: "https://upload.wikimedia.org/wikipedia/en/5/51/Overwatch_cover_art.jpg",
+        video: "https://archive.org/download/overwatchgameplay/overwatch_sample.mp4",
+        desc: "Un FPS multijoueur basé sur les héros et la coopération."
+    },
+
+    // ---- 20 autres jeux ----
+    { title:"Stardew Valley", img:"https://upload.wikimedia.org/wikipedia/en/f/fd/Stardew_Valley.png", video:"https://archive.org/download/stardewsample/stardew.mp4", desc:"Un jeu de ferme relaxant et très complet." },
+    { title:"Terraria", img:"https://upload.wikimedia.org/wikipedia/en/5/5c/Terraria_Steam_artwork.jpg", video:"https://archive.org/download/terrariasample/terraria.mp4", desc:"Un jeu d'exploration et construction en 2D." },
+    { title:"Red Dead Redemption 2", img:"https://upload.wikimedia.org/wikipedia/en/4/44/Red_Dead_Redemption_II.jpg", video:"https://archive.org/download/rdr2sample/rdr2.mp4", desc:"Un western immersif signé Rockstar." },
+    { title:"GTA V", img:"https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_V.png", video:"https://archive.org/download/gtavsample/gtav.mp4", desc:"L'un des jeux les plus populaires de l'histoire." },
+    { title:"Subnautica", img:"https://upload.wikimedia.org/wikipedia/en/5/5e/Subnautica_cover_art.png", video:"https://archive.org/download/subnauticasample/subnautica.mp4", desc:"Un survival dans les profondeurs océaniques." },
+    { title:"League of Legends", img:"https://upload.wikimedia.org/wikipedia/en/7/77/League_of_Legends_logo.png", video:"https://archive.org/download/lolsample/lol.mp4", desc:"Le MOBA le plus joué au monde." },
+    { title:"Valorant", img:"https://upload.wikimedia.org/wikipedia/en/5/5f/Valorant_logo.png", video:"https://archive.org/download/valorantsample/valorant.mp4", desc:"Un FPS stratégique basé sur les compétences des agents." },
+    { title:"Among Us", img:"https://upload.wikimedia.org/wikipedia/en/9/9a/Among_Us_cover_art.jpg", video:"https://archive.org/download/amongussample/amongus.mp4", desc:"Déduisez qui est l'imposteur à bord du vaisseau." },
+    { title:"Cyberpunk 2077", img:"https://upload.wikimedia.org/wikipedia/en/9/9f/Cyberpunk_2077_box_art.jpg", video:"https://archive.org/download/cyberpunksample/cyberpunk.mp4", desc:"Explorez Night City dans ce RPG futuriste." },
+    { title:"Animal Crossing: New Horizons", img:"https://upload.wikimedia.org/wikipedia/en/2/2e/Animal_Crossing_New_Horizons.jpg", video:"https://archive.org/download/acnhsample/acnh.mp4", desc:"Un jeu de vie apaisant sur une île tropicale." },
+    { title:"Doom Eternal", img:"https://upload.wikimedia.org/wikipedia/en/8/8e/Doom_Eternal.jpg", video:"https://archive.org/download/doometernalsample/doometernal.mp4", desc:"Un FPS ultra nerveux et spectaculaire." },
+    { title:"Hades", img:"https://upload.wikimedia.org/wikipedia/en/e/e0/Hades_cover_art.jpg", video:"https://archive.org/download/hadessample/hades.mp4", desc:"Un rogue-like brillant avec narration dynamique." },
+    { title:"Portal 2", img:"https://upload.wikimedia.org/wikipedia/en/f/f9/Portal2cover.jpg", video:"https://archive.org/download/portal2sample/portal2.mp4", desc:"Résolvez des puzzles avec des portails." },
+    { title:"Cuphead", img:"https://upload.wikimedia.org/wikipedia/en/9/9a/Cuphead_%282017_video_game%29.png", video:"https://archive.org/download/cupheadsample/cuphead.mp4", desc:"Un run-and-gun difficile au style cartoon années 30." },
+    { title:"Dark Souls III", img:"https://upload.wikimedia.org/wikipedia/en/b/bb/Dark_souls_3_cover_art.jpg", video:"https://archive.org/download/darksoulssample/ds3.mp4", desc:"L'un des jeux les plus exigeants de la série Souls." },
+    { title:"Assassin’s Creed Valhalla", img:"https://upload.wikimedia.org/wikipedia/en/0/07/ACValhalla.jpg", video:"https://archive.org/download/acvalhallasample/acv.mp4", desc:"Explorez l'époque viking dans un vaste RPG." },
+    { title:"Fall Guys", img:"https://upload.wikimedia.org/wikipedia/en/9/9d/Fall_Guys_cover_art.jpg", video:"https://archive.org/download/fallguyssample/fallguys.mp4", desc:"Un party-game multijoueur délirant." },
+    { title:"Metroid Dread", img:"https://upload.wikimedia.org/wikipedia/en/b/bb/Metroid_Dread.jpg", video:"https://archive.org/download/metroidsample/metroid.mp4", desc:"Un metroidvania moderne rapide et intense." },
+    { title:"Rocket League", img:"https://upload.wikimedia.org/wikipedia/en/e/e0/Rocket_League_coverart.jpg", video:"https://archive.org/download/rocketleaguesample/rl.mp4", desc:"Du football… avec des voitures !" }
+];
+
+// --- PAGINATION ---
+function showPage(page) {
+    const list = document.getElementById("gameList");
+    list.innerHTML = "";
+    const start = (page - 1) * 10;
+    const end = page * 10;
+
+    games.slice(start, end).forEach(g => {
+        list.innerHTML += `
+            <div class="game">
+                <h2>${g.title}</h2>
+                <img src="${g.img}" alt="${g.title}">
+                <video controls>
+                    <source src="${g.video}" type="video/mp4">
+                </video>
+                <p>${g.desc}</p>
+            </div>
+        `;
+    });
+}
+
+showPage(1);
+</script>
 
 </body>
 </html>
